@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> Ember </title>
+	<script src="https://simplycodingcourses.com/files/simplyjs/simply.js"></script>
+	<script>
+	function start(){
+sjs.open("target",850,700);
+var BG = new sjs.Image("Images/win.png");
+	BG.setSize(850,700);
+	 
+	  var replayBtn = new sjs.Button("Play Again?", function(){
+window.location = "index.html";
+});
+	replayBtn.bottom();
+}
+	</script>
+  </head>
+ <body onload="start()">
+<h1> Ember </h1>
+
+<div id="target" style="margin:auto;background:grey;"></div>
+</body>
+</html>

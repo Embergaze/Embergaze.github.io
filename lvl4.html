@@ -1,0 +1,181 @@
+<html>
+  <head>
+	<title> Ember </title>
+		<script src="https://simplycodingcourses.com/files/simply.js"></script>
+		<script>
+		function start(){
+		sjs.open("target",800,500);
+
+
+		var background = new sjs.Image("Images/forestbg2.png");
+			background.setSize(2500, 500);
+
+	//player properties
+		var player = new sjs.Image("Images/Ridle.png");
+		player.type = "player";
+		player.setSize(370,300);
+		player.setGravity(3);
+		player.bottom();
+		player.friction = .3;
+
+		sjs.scrollable(player,background);
+
+	//playercontrol
+		var r_images = ["Images/R1.png", "Images/R1.png", "Images/R2.png", "Images/R2.png", "Images/R3.png", "Images/R3.png", "Images/R4.png", "Images/R4.png", "Images/R5.png", "Images/R5.png"];
+
+		var l_images = ["Images/L1.png", "Images/L1.png", "Images/L2.png", "Images/L2.png", "Images/L3.png", "Images/L3.png", "Images/L4.png", "Images/L4.png", "Images/L5.png", "Images/L5.png"];
+
+		var r_facing = true;
+		var r_track = 0;
+		var l_track = 0;
+
+		sjs.keyDown(D_KEY, function(){
+			r_facing = true;
+			r_track = r_track + 1;
+			player.pushRight(3);
+			player.setImage(r_images[r_track]);
+			if(r_track == 9){
+				r_track = 0;
+	}});
+
+		sjs.keyDown(A_KEY, function(){
+			r_facing = false;
+			l_track = l_track + 1;
+			player.pushLeft(3);
+			player.setImage(l_images[l_track]);
+			if(l_track == 9){
+				l_track = 0;
+	}});
+
+		window.addEventListener("keyup", function(e){
+	if(e.keyCode == D_KEY){
+		player.setImage("Images/Ridle.png");
+		r_track = 0;
+		} else if (e.keyCode == A_KEY){
+		player.setImage("Images/Lidle.png");
+		l_track = 0;
+	}});
+
+			var canShoot = true;
+		sjs.keyDown(ONE_KEY, function(){
+
+			if(canShoot == true)
+			{
+				canShoot = false;
+
+				if(r_facing == true)
+				{
+					var blast = new sjs.Image("Images/Rblast.png");
+					blast.type = "blast";
+					blast.setSize(100,50);
+					blast.friction = 0;
+					blast.noBounds = true;
+
+					blast.moveTo(player.getX()+360,player.getY()+50);
+					blast.pushRight(25.5);
+					} else {
+						var blast2 = new sjs.Image("Images/Lblast.png");
+					blast2.type = "blast2";
+					blast2.setSize(100,50);
+					blast2.friction = 0;
+					blast2.noBounds = true;
+
+					blast2.moveTo(player.getX()+-60,player.getY()+60);
+					blast2.pushLeft(25.5);
+				}	
+
+				setTimeout(function(){
+					canShoot = true;
+				},1500);
+			}
+		});
+
+		//onhit
+	sjs.onHit("player",["right_screen","left_screen","top_screen"],function(x,y){
+		sjs.stoppedBy(x,y);
+});
+	sjs.onHit("enemy","bottom_screen", function(x,y){
+		sjs.stoppedBy(x,y);
+});
+	sjs.onHit("enemy",["left_screen","right_screen"], function(x,y){
+		sjs.bounceOff(x,y);
+});
+	sjs.onHit(["blast","blast2"],"enemy", function(x,y){
+		x.destroy();
+		y.destroy();
+		Enemies = Enemies - 1;
+		Enemies_txt.setText("Enemies :"+ Enemies);
+
+		if(Enemies == 0){
+			window.location = "win.html";
+		}
+		
+	});
+	
+	var Enemies = 8;
+	var Enemies_txt = new sjs.Text("Enemies: 8", 21, "beige");
+		Enemies_txt.right().offset(-20, 0);
+		Enemies_txt.fixed = true;
+
+	var lives = 3;
+	var die = true;
+
+	sjs.onHit("player","enemy", function(x,y)
+	{
+		if(die == true)
+		{
+			die = false;
+			lives = lives - 1;
+
+			if(lives == 0)
+			{
+				x.destroy();
+				window.location = "lose.html";
+			}
+			else
+			{
+				setTimeout(function(){
+					die = true;
+					},5000);
+			}
+		}
+	});
+	
+	//NPC function
+
+		function enemy(position){
+	var enemy = new sjs.Image("Images/snakeL.png");
+		enemy.type = "enemy";
+		enemy.setSize(400,340)
+		enemy.center().offset(-sjs.gx+position,100);
+		enemy.friction = 0;
+		enemy.noBounds = true;
+		enemy.setHFlipImages("Images/snakeL.png","Images/snakeR.png");
+		enemy.setGravity();
+			enemy.pushHFacing();
+			enemy.accel=.5;
+	}
+
+		enemy(1700);
+		enemy(1200);
+		enemy(1900);
+		enemy(700);
+		enemy(1400);
+		enemy(1800);
+		enemy(1000);
+		enemy(2000);
+		enemy(2500);
+		enemy(2300);
+		enemy(2150);
+		enemy(500);
+		enemy(300);
+
+		} //end start
+		</script>
+	</head>
+  <body onload="start()">
+<h1> Ember </h1>
+
+<div id="target" style="margin:auto;background:grey;"></div>
+</body>
+</html>
